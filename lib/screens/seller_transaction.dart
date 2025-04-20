@@ -11,14 +11,13 @@ class SellerTransactionPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Riwayat Transaksi",
+            "Rivayat Transaksi",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF8B0000),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           
           // Completed Orders
           const Text(
@@ -28,7 +27,7 @@ class SellerTransactionPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           
           _buildTransactionItem(
             "INV/20250204/XXX/34512389814",
@@ -39,6 +38,8 @@ class SellerTransactionPage extends StatelessWidget {
             "Palembang",
             "12 Sep, 16:45",
           ),
+          const SizedBox(height: 16),
+          
           _buildTransactionItem(
             "INV/20250204/XXX/34567890631",
             "Jordan Bernando",
@@ -63,9 +64,8 @@ class SellerTransactionPage extends StatelessWidget {
     String arrival,
   ) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,11 +73,12 @@ class SellerTransactionPage extends StatelessWidget {
               invoice,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 8),
             Text(
               customer,
               style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             
             Text(
               product,
@@ -89,26 +90,27 @@ class SellerTransactionPage extends StatelessWidget {
             const SizedBox(height: 8),
             
             Text("Jumlah Pembelian : $quantity"),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             
             Row(
               children: [
-                const Icon(Icons.push_pin, size: 16),
-                const SizedBox(width: 4),
+                const Icon(Icons.push_pin, size: 20),
+                const SizedBox(width: 8),
                 Text(shipping),
               ],
             ),
+            const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.location_on, size: 16),
-                const SizedBox(width: 4),
+                const Icon(Icons.location_on, size: 20),
+                const SizedBox(width: 8),
                 Text(address),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             
             const Divider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             
             Text(
               "Tiba pada",

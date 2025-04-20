@@ -15,32 +15,31 @@ class SellerOrderPage extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF8B0000),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           
           // Order Status Summary
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildOrderStatus("5", "Semua Pesanan"),
               _buildOrderStatus("1", "Menunggu Pembayaran"),
               _buildOrderStatus("1", "Siap Dikirim"),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildOrderStatus("2", "Dalam Perjalanan"),
               _buildOrderStatus("0", "Dibatalkan"),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           
           const Divider(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           
           // All Orders Section
           Row(
@@ -60,7 +59,7 @@ class SellerOrderPage extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           
           // Order List
           _buildOrderItem(
@@ -72,6 +71,8 @@ class SellerOrderPage extends StatelessWidget {
             "2pcs",
             ["Reguler - Golek", "Tangerang"],
           ),
+          const SizedBox(height: 16),
+          
           _buildOrderItem(
             "INV/20250204/XXX/3459719811",
             "Azriel",
@@ -81,6 +82,8 @@ class SellerOrderPage extends StatelessWidget {
             "1pcs",
             ["Reguler - Golek", "Bandung"],
           ),
+          const SizedBox(height: 16),
+          
           _buildOrderItem(
             "INV/20250204/XXX/3459719811",
             "Leonardy",
@@ -107,7 +110,7 @@ class SellerOrderPage extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(fontSize: 12),
+          style: const TextStyle(fontSize: 14),
         ),
       ],
     );
@@ -123,9 +126,8 @@ class SellerOrderPage extends StatelessWidget {
     List<String> details,
   ) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -136,17 +138,25 @@ class SellerOrderPage extends StatelessWidget {
                   invoice,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  status,
-                  style: TextStyle(
-                    color: _getStatusColor(status),
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(status).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    status,
+                    style: TextStyle(
+                      color: _getStatusColor(status),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
             ),
-            Text(customer),
             const SizedBox(height: 8),
+            Text(customer),
+            const SizedBox(height: 12),
             
             Text(
               "Batas Respons",
@@ -159,37 +169,41 @@ class SellerOrderPage extends StatelessWidget {
             const SizedBox(height: 12),
             
             const Divider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             
             Text(
               product,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            Text("Jumlah Pembelian : $quantity"),
             const SizedBox(height: 8),
+            Text("Jumlah Pembelian : $quantity"),
+            const SizedBox(height: 12),
             
             for (var detail in details)
               Padding(
-                padding: const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
                   children: [
                     if (detail == details.first)
-                      const Icon(Icons.check_box_outline_blank, size: 18)
+                      const Icon(Icons.check_box_outline_blank, size: 20)
                     else
-                      const Icon(Icons.check_box, size: 18),
+                      const Icon(Icons.check_box, size: 20),
                     const SizedBox(width: 8),
                     Text(detail),
                   ],
                 ),
               ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             
-            Align(
-              alignment: Alignment.centerRight,
+            SizedBox(
+              width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFD9A25F),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 child: const Text("Konfirmasi Resi"),
               ),

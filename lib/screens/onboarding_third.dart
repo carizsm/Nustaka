@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'homepage.dart';
 import 'login_phone.dart';
 import 'signup_email.dart';
+import 'seller_homepage.dart'; // We'll create this new file
 
 class OnboardingThird extends StatelessWidget {
   const OnboardingThird({super.key});
@@ -107,7 +108,31 @@ class OnboardingThird extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
+
+            // New Seller Login Button
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SellerHomepage()),
+                  );
+                },
+                child: const Text(
+                  'Masuk sebagai Penjual',
+                  style: TextStyle(
+                    color: Color(0xFFD96D29),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 12),
           ],
         ),
       ),

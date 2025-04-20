@@ -23,8 +23,10 @@ class _SellerHomepageState extends State<SellerHomepage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F898),
       appBar: AppBar(
-        title: const Text('Penjual Nustaka'),
-        backgroundColor: const Color(0xFFD9A25F),
+        title: const Text('Halo, Mang Travis'),
+        backgroundColor: const Color(0xFFF4F898),
+        elevation: 0,
+        foregroundColor: Colors.black,
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -45,7 +47,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'Transaksi',
+            label: 'Transaction',
           ),
         ],
         selectedItemColor: const Color(0xFF8B0000),
@@ -65,16 +67,6 @@ class SellerHomeContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Halo, Mang Travis",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF8B0000),
-            ),
-          ),
-          const SizedBox(height: 20),
-          
           // Dashboard Section
           const Text(
             "Dashboard",
@@ -83,25 +75,49 @@ class SellerHomeContent extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatCard("Hari ini", "20", "Potensi +Rp200 rb"),
-              _buildStatCard("12", "Potensi +Rp65 rb", "Pesanan Baru"),
+              Expanded(
+                child: _buildDashboardCard(
+                  "Hari ini",
+                  "20",
+                  "Potensi +Rp200 rb",
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildDashboardCard(
+                  "Lihat Statistik toko >",
+                  "",
+                  "",
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatCard("0", "Dibatalkan", ""),
-              _buildStatCard("", "Komplain", ""),
+              Expanded(
+                child: _buildDashboardCard(
+                  "12",
+                  "Pesanan Baru",
+                  "Siap Dikirim",
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildDashboardCard(
+                  "0",
+                  "Dibatalkan",
+                  "Komplain",
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           
           // Products Section
           const Text(
@@ -111,35 +127,61 @@ class SellerHomeContent extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           
           _buildProductCard(
             "Sate Madura",
             "Rp 100.000",
             "4.8 • 100+ terjual",
           ),
+          const SizedBox(height: 8),
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Statistik"),
+              TextButton(
+                onPressed: () {},
+                child: const Text("Edit"),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
           _buildProductCard(
             "Sate Madura Mang Travis Asli California ...",
             "Rp 100.000",
             "4.8 • 100+ terjual",
+          ),
+          const SizedBox(height: 8),
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Statistik"),
+              TextButton(
+                onPressed: () {},
+                child: const Text("Edit"),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatCard(String title, String value, String subtitle) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 14),
-              ),
+  Widget _buildDashboardCard(String title, String value, String subtitle) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 14),
+            ),
+            if (value.isNotEmpty)
               Text(
                 value,
                 style: const TextStyle(
@@ -147,13 +189,12 @@ class SellerHomeContent extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              if (subtitle.isNotEmpty)
-                Text(
-                  subtitle,
-                  style: const TextStyle(fontSize: 12),
-                ),
-            ],
-          ),
+            if (subtitle.isNotEmpty)
+              Text(
+                subtitle,
+                style: const TextStyle(fontSize: 12),
+              ),
+          ],
         ),
       ),
     );
@@ -161,7 +202,6 @@ class SellerHomeContent extends StatelessWidget {
 
   Widget _buildProductCard(String name, String price, String stats) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
@@ -169,10 +209,13 @@ class SellerHomeContent extends StatelessWidget {
             Container(
               width: 60,
               height: 60,
-              color: Colors.grey[200],
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: const Icon(Icons.fastfood, size: 30),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,10 +228,6 @@ class SellerHomeContent extends StatelessWidget {
                   Text(stats),
                 ],
               ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
             ),
           ],
         ),
