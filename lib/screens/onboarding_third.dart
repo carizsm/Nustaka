@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'homepage.dart';
 import 'login_phone.dart';
 import 'signup_email.dart';
-import 'seller_homepage.dart'; // We'll create this new file
+import 'seller_login_phone.dart'; // We'll create this new file
 
 class OnboardingThird extends StatelessWidget {
   const OnboardingThird({super.key});
@@ -117,11 +117,11 @@ class OnboardingThird extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SellerHomepage()),
+                    MaterialPageRoute(builder: (_) => const SellerLoginPhonePage()),
                   );
                 },
                 child: const Text(
-                  'Masuk sebagai Penjual',
+                  'Saya adalah Penjual',
                   style: TextStyle(
                     color: Color(0xFFD96D29),
                     fontSize: 16,
