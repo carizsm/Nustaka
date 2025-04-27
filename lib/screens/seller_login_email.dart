@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
-import 'login_phone.dart';
-import 'signup_email.dart';
+import 'seller_homepage.dart';
+import 'seller_login_phone.dart';
+import 'seller_signup_email.dart';
 
 class SellerLoginEmailPage extends StatelessWidget {
   const SellerLoginEmailPage({super.key});
@@ -67,7 +67,7 @@ class SellerLoginEmailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const Homepage()),
+                  MaterialPageRoute(builder: (_) => const SellerHomepage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -115,7 +115,7 @@ class SellerLoginEmailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const LoginPhonePage()),
+                  MaterialPageRoute(builder: (_) => const SellerLoginPhonePage()),
                 );
               },
               icon: const Icon(Icons.phone_android),
@@ -157,7 +157,7 @@ class SellerLoginEmailPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SignupEmailPage()),
+                    MaterialPageRoute(builder: (_) => const SellerSignupEmailPage()),
                   );
                 },
                 child: const Text.rich(

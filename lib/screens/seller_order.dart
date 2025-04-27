@@ -18,7 +18,7 @@ class SellerOrderPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Order Status Summary
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,10 +37,10 @@ class SellerOrderPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          
+
           const Divider(),
           const SizedBox(height: 16),
-          
+
           // All Orders Section
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,13 +54,15 @@ class SellerOrderPage extends StatelessWidget {
               ),
               DropdownButton<String>(
                 value: "Semua",
-                items: const [DropdownMenuItem(value: "Semua", child: Text("Semua ▼"))],
+                items: const [
+                  DropdownMenuItem(value: "Semua", child: Text("Semua ▼"))
+                ],
                 onChanged: (value) {},
               ),
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Order List
           _buildOrderItem(
             "INV/20250204/XXX/3456789812",
@@ -72,7 +74,7 @@ class SellerOrderPage extends StatelessWidget {
             ["Reguler - Golek", "Tangerang"],
           ),
           const SizedBox(height: 16),
-          
+
           _buildOrderItem(
             "INV/20250204/XXX/3459719811",
             "Azriel",
@@ -83,7 +85,7 @@ class SellerOrderPage extends StatelessWidget {
             ["Reguler - Golek", "Bandung"],
           ),
           const SizedBox(height: 16),
-          
+
           _buildOrderItem(
             "INV/20250204/XXX/3459719811",
             "Leonardy",
@@ -132,12 +134,16 @@ class SellerOrderPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  invoice,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Expanded(
+                  child: Text(
+                    invoice,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
@@ -150,6 +156,8 @@ class SellerOrderPage extends StatelessWidget {
                       color: _getStatusColor(status),
                       fontWeight: FontWeight.bold,
                     ),
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -157,7 +165,7 @@ class SellerOrderPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text(customer),
             const SizedBox(height: 12),
-            
+
             Text(
               "Batas Respons",
               style: TextStyle(color: Colors.grey[600]),
@@ -167,10 +175,10 @@ class SellerOrderPage extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            
+
             const Divider(),
             const SizedBox(height: 12),
-            
+
             Text(
               product,
               style: const TextStyle(fontWeight: FontWeight.bold),
@@ -178,7 +186,7 @@ class SellerOrderPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text("Jumlah Pembelian : $quantity"),
             const SizedBox(height: 12),
-            
+
             for (var detail in details)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -194,7 +202,7 @@ class SellerOrderPage extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
