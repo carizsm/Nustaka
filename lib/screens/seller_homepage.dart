@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'seller_order.dart';
 import 'seller_transaction.dart';
+import 'seller_tambah_produk.dart';
 
 class SellerHomepage extends StatefulWidget {
   const SellerHomepage({super.key});
@@ -71,12 +72,19 @@ class _SellerHomepageState extends State<SellerHomepage> {
         unselectedItemColor: Colors.white,
       ),
       floatingActionButton: _currentIndex == 0
-          ? FloatingActionButton(
-              backgroundColor: const Color(0xFF9EB23B),
-              onPressed: () {},
-              child: const Icon(Icons.add, color: Colors.white),
-            )
-          : null,
+        ? FloatingActionButton(
+            backgroundColor: const Color(0xFF9EB23B),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TambahProdukPage(),
+                ),
+              );
+            },
+            child: const Icon(Icons.add, color: Colors.white),
+          )
+        : null,
     );
   }
 }
