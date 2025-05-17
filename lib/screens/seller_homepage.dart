@@ -64,7 +64,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
             label: 'Order',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
+            icon: Icon(Icons.receipt),
             label: 'Transaction',
           ),
         ],
