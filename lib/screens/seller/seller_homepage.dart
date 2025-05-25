@@ -6,6 +6,7 @@ import 'seller_statistik_toko.dart';
 import 'seller_statistik_produk.dart';
 import 'seller_profil.dart';
 import 'seller_user_data.dart';
+import 'seller_edit_produk.dart';
 
 class SellerHomepage extends StatefulWidget {
   const SellerHomepage({super.key});
@@ -329,7 +330,23 @@ class SellerHomeContent extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProdukPage(
+                                  namaProduk: name,
+                                  deskripsi: visible ? "Sate Madura asli cuy" : "Mang Travis Jualan Sate cuy!",
+                                  detail: visible ? "Daging ayam pilihan, bumbu khas madura" : "Belum ada detail",
+                                  harga: price.replaceAll(RegExp(r'[^0-9]'), ''),
+                                  stok: visible ? 10 : 0,
+                                  satuan: "Pcs",
+                                  visible: visible,
+                                  gambar: image,
+                                ),
+                              ),
+                            );
+                          },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.grey),
                           ),
