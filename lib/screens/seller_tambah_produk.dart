@@ -26,6 +26,7 @@ class _TambahProdukPageState extends State<TambahProdukPage> {
     bool isHargaEmpty = _hargaController.text.isEmpty;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Tambah Produk', style: TextStyle(color: secondaryYellow)),
         backgroundColor: primaryGreen,

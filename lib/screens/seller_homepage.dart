@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'seller_order.dart';
 import 'seller_transaction.dart';
 import 'seller_tambah_produk.dart';
+import 'seller_statistik_toko.dart';
 
 class SellerHomepage extends StatefulWidget {
   const SellerHomepage({super.key});
@@ -99,7 +100,7 @@ class SellerHomeContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDashboard(),
+          _buildDashboard(context),
           const SizedBox(height: 24),
           const Text(
             "Produk",
@@ -128,7 +129,7 @@ class SellerHomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDashboard() {
+  Widget _buildDashboard(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -145,7 +146,12 @@ class SellerHomeContent extends StatelessWidget {
             ),
             const Spacer(),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SellerStatistikToko())
+                );
+              },
               child: const Text(
                 'Lihat Statistik toko >',
                 style: TextStyle(color: Colors.green),
