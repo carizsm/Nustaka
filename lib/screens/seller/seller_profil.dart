@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'seller_user_data.dart';
-import 'onboarding_third.dart'; // pastikan file ini sudah ada
+import 'package:nustaka/screens/onboarding_third.dart'; // pastikan file ini sudah ada
 
 class SellerProfilPage extends StatelessWidget {
   const SellerProfilPage({super.key});

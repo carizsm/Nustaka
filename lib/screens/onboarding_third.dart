@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
-import 'login_phone.dart';
-import 'signup_email.dart';
-import 'seller_login_phone.dart'; // We'll create this new file
+import 'package:nustaka/screens/buyer/homepage.dart';
+import 'package:nustaka/screens/buyer/login_phone.dart';
+import 'package:nustaka/screens/buyer/signup_email.dart';
+import 'package:nustaka/screens/seller/seller_login_phone.dart'; // We'll create this new file
 
 class OnboardingThird extends StatelessWidget {
   const OnboardingThird({super.key});
