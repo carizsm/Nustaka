@@ -4,6 +4,8 @@ import 'seller_transaction.dart';
 import 'seller_tambah_produk.dart';
 import 'seller_statistik_toko.dart';
 import 'seller_statistik_produk.dart';
+import 'seller_profil.dart';
+import 'seller_user_data.dart';
 
 class SellerHomepage extends StatefulWidget {
   const SellerHomepage({super.key});
@@ -29,8 +31,8 @@ class _SellerHomepageState extends State<SellerHomepage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF9EB23B),
         elevation: 0,
-        title: const Text(
-          'Halo, Mang Travis',
+        title: Text(
+          'Halo, $currentUsername',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
@@ -44,7 +46,12 @@ class _SellerHomepageState extends State<SellerHomepage> {
           ),
           IconButton(
             icon: const Icon(Icons.person_outline, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SellerProfilPage()),
+              );
+            },
           ),
         ],
       ),
