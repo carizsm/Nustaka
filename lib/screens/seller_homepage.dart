@@ -3,6 +3,7 @@ import 'seller_order.dart';
 import 'seller_transaction.dart';
 import 'seller_tambah_produk.dart';
 import 'seller_statistik_toko.dart';
+import 'seller_statistik_produk.dart';
 
 class SellerHomepage extends StatefulWidget {
   const SellerHomepage({super.key});
@@ -25,6 +26,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF9EB23B),
         elevation: 0,
         title: const Text(
@@ -121,7 +123,7 @@ class SellerHomeContent extends StatelessWidget {
             image: 'assets/images/sate_travis.png', // ganti dengan gambar asli
             name: 'Sate Madura Mang Travis Asli California ...',
             price: 'Rp 100.000',
-            rating: '4.8 • 100+ terjual',
+            rating: '0 • 0 terjual',
             visible: false,
           ),
         ],
@@ -290,7 +292,27 @@ class SellerHomeContent extends StatelessWidget {
                     children: [
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SellerStatistikProduk(
+                                  namaProduk: name,
+                                  lokasi: "Bandung, Jawa Barat",
+                                  deskripsi: visible ? "Sate Madura aseli cuy" : "Mang Travis Jualan Sate cuy!",
+                                  harga: price,
+                                  gambar: image,
+                                  terjual: visible ? 56 : 0,
+                                  dilihat: visible ? 34 : 0,
+                                  dipesan: visible ? 47 : 0,
+                                  rating: visible ? 4.9 : 0.0,
+                                  ulasan: visible
+                                      ? {5: 1034, 4: 24, 3: 6, 2: 3, 1: 1}
+                                      : {5: 0, 4: 0, 3: 0, 2: 0, 1: 0},
+                                ),
+                              ),
+                            );
+                          },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.grey),
                           ),
