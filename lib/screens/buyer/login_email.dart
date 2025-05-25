@@ -1,7 +1,7 @@
 // lib/screens/login_email.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart'; // Path ke AuthProvider Anda
+import '../../providers/auth_provider.dart'; // Path ke AuthProvider Anda
 import 'homepage.dart';
 import 'login_phone.dart';
 import 'signup_email.dart';
