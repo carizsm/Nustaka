@@ -3,6 +3,7 @@ import 'notification_page.dart';
 import 'wishlist_page.dart';
 import 'transaction_page.dart';
 import 'user_profille.dart';
+import 'product_detail_page.dart';
 
 
 class Homepage extends StatefulWidget {
@@ -32,7 +33,8 @@ class _HomepageState extends State<Homepage> {
       location: "Madura",
       imagePath: "assets/images/sate_madura.png",
       category: "Madura",
-      iconPath: ""
+      iconPath: "",
+      description: "Sate Madura adalah daging ayam atau kambing yang dibakar dan disajikan dengan bumbu kacang khas Madura.",
     ),
     Product(
       title: "Mie Kocok",
@@ -41,7 +43,8 @@ class _HomepageState extends State<Homepage> {
       location: "Bandung, Jawa Barat",
       imagePath: "assets/images/mie_kocok.png",
       category: "Jawa Barat",
-      iconPath: "assets/icons/makanan.png"
+      iconPath: "assets/icons/makanan.png",
+      description: "Mie Kocok adalah mie kuning dengan kuah kaldu sapi, kikil, dan toge, khas dari Bandung.",
     ),
     Product(
       title: "Bakso Malang Jl. Keraton",
@@ -50,7 +53,8 @@ class _HomepageState extends State<Homepage> {
       location: "Jawa Timur",
       imagePath: "assets/images/bakso_malang.png",
       category: "Jawa Timur",
-      iconPath: ""
+      iconPath: "",
+      description: "Bakso Malang berisi campuran bakso, tahu, siomay, dan gorengan dengan kuah kaldu yang gurih.",
     ),
     Product(
       title: "Batagor",
@@ -59,7 +63,8 @@ class _HomepageState extends State<Homepage> {
       location: "Bandung, Jawa Barat",
       imagePath: "assets/images/batagor.png",
       category: "Jawa Barat",
-      iconPath: "assets/icons/makanan.png"
+      iconPath: "assets/icons/makanan.png",
+      description: "Batagor adalah makanan khas Bandung berupa tahu isi ikan tenggiri goreng dengan saus kacang.",
     ),
     Product(
       title: "Sepatu Kulit",
@@ -69,6 +74,7 @@ class _HomepageState extends State<Homepage> {
       imagePath: "assets/images/sepatu_kulit.png",
       category: "Jawa Barat",
       iconPath: "assets/icons/kerajinan.png",
+      description: "Sepatu kulit Garut terkenal dengan kualitas kulit asli dan pengerjaan tangan yang rapi.",
     ),
     Product(
       title: "Baju Batik Megamendung",
@@ -78,6 +84,7 @@ class _HomepageState extends State<Homepage> {
       imagePath: "assets/images/batik_megamendung.png",
       category: "Jawa Barat",
       iconPath: "assets/icons/kerajinan.png",
+      description: "Batik Megamendung adalah motif khas Cirebon dengan pola awan besar berwarna cerah.",
     ),
   ];
 
@@ -202,10 +209,22 @@ class _HomepageState extends State<Homepage> {
               mainAxisSpacing: 10,
               childAspectRatio: 0.75,
               children: filteredProducts.map((product) {
-                return selectedCategory == "Jawa Barat"
-                    ? buildSimpleCard(product)
-                    : buildProductCard(product);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductDetailPage(product: product),
+                      ),
+                    );
+                  },
+                  child: selectedCategory == "Jawa Barat"
+                      ? buildSimpleCard(product)
+                      : buildProductCard(product),
+                );
               }).toList(),
+
+
             ),
           ),
         ],
@@ -345,6 +364,7 @@ class Product {
   final String imagePath;
   final String category;
   final String iconPath;
+  final String description;
 
   Product({
     required this.title,
@@ -354,5 +374,7 @@ class Product {
     required this.imagePath,
     required this.category,
     required this.iconPath,
+    required this.description,
   });
 }
+
