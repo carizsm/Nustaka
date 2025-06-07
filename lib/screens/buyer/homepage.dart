@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'notification_page.dart';
 import 'wishlist_page.dart';
+import 'transaction_page.dart';
+import 'user_profille.dart';
+
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -123,11 +126,18 @@ class _HomepageState extends State<Homepage> {
           ),
           IconButton(
             icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              // Aksi saat ikon keranjang ditekan (jika ada)
+            },
           ),
           IconButton(
             icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const UbahProfilPage()),
+              );
+            },
           ),
         ],
       ),
@@ -210,6 +220,11 @@ class _HomepageState extends State<Homepage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const WishlistPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => TransactionPage()),
             );
           }
         },

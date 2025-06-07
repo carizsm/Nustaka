@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'transaction_page.dart';
+import 'user_profille.dart';
+
 
 class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
@@ -95,7 +98,12 @@ class WishlistPage extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const UbahProfilPage()),
+              );
+            },
           ),
         ],
       ),
@@ -147,7 +155,12 @@ class WishlistPage extends StatelessWidget {
         currentIndex: 1,
         onTap: (index) {
           if (index == 0) {
-            Navigator.pop(context);
+            Navigator.pop(context); // ke Home
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => TransactionPage()),
+            );
           }
         },
         items: const [
