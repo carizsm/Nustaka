@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../models/product.dart' as model;
+import '../../services/api_service.dart';
+
 import 'notification_page.dart';
 import 'wishlist_page.dart';
 import 'transaction_page.dart';
 import 'user_profille.dart';
 import 'product_detail_page.dart';
-
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -15,6 +17,8 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   String selectedCategory = 'Semua';
+  bool isLoading = true;
+  final ApiService apiService = ApiService();
 
   final categories = [
     'Semua',
@@ -24,73 +28,33 @@ class _HomepageState extends State<Homepage> {
     'Kalimantan Selatan',
   ];
 
-  // Data produk
-  final List<Product> allProducts = [
-    Product(
-      title: "Sate Madura Haji Nanang",
-      price: "Rp 35.000",
-      rating: "4.8 • 100+ terjual",
-      location: "Madura",
-      imagePath: "assets/images/sate_madura.png",
-      category: "Madura",
-      iconPath: "",
-      description: "Sate Madura adalah daging ayam atau kambing yang dibakar dan disajikan dengan bumbu kacang khas Madura.",
-    ),
-    Product(
-      title: "Mie Kocok",
-      price: "Rp 30.000",
-      rating: "4.7 • 100+ terjual",
-      location: "Bandung, Jawa Barat",
-      imagePath: "assets/images/mie_kocok.png",
-      category: "Jawa Barat",
-      iconPath: "assets/icons/makanan.png",
-      description: "Mie Kocok adalah mie kuning dengan kuah kaldu sapi, kikil, dan toge, khas dari Bandung.",
-    ),
-    Product(
-      title: "Bakso Malang Jl. Keraton",
-      price: "Rp 18.000",
-      rating: "4.5 • 10rb+ terjual",
-      location: "Jawa Timur",
-      imagePath: "assets/images/bakso_malang.png",
-      category: "Jawa Timur",
-      iconPath: "",
-      description: "Bakso Malang berisi campuran bakso, tahu, siomay, dan gorengan dengan kuah kaldu yang gurih.",
-    ),
-    Product(
-      title: "Batagor",
-      price: "Rp 15.000",
-      rating: "4.9 • 100+ terjual",
-      location: "Bandung, Jawa Barat",
-      imagePath: "assets/images/batagor.png",
-      category: "Jawa Barat",
-      iconPath: "assets/icons/makanan.png",
-      description: "Batagor adalah makanan khas Bandung berupa tahu isi ikan tenggiri goreng dengan saus kacang.",
-    ),
-    Product(
-      title: "Sepatu Kulit",
-      price: "Rp 150.000",
-      rating: "4.8 • 50+ terjual",
-      location: "Garut, Jawa Barat",
-      imagePath: "assets/images/sepatu_kulit.png",
-      category: "Jawa Barat",
-      iconPath: "assets/icons/kerajinan.png",
-      description: "Sepatu kulit Garut terkenal dengan kualitas kulit asli dan pengerjaan tangan yang rapi.",
-    ),
-    Product(
-      title: "Baju Batik Megamendung",
-      price: "Rp 140.000",
-      rating: "4.7 • 100+ terjual",
-      location: "Cirebon, Jawa Barat",
-      imagePath: "assets/images/batik_megamendung.png",
-      category: "Jawa Barat",
-      iconPath: "assets/icons/kerajinan.png",
-      description: "Batik Megamendung adalah motif khas Cirebon dengan pola awan besar berwarna cerah.",
-    ),
-  ];
+  List<model.FullyEnrichedProduct> allProducts = [];
 
-  List<Product> get filteredProducts {
+  List<model.FullyEnrichedProduct> get filteredProducts {
     if (selectedCategory == 'Semua') return allProducts;
-    return allProducts.where((p) => p.category == selectedCategory).toList();
+    return allProducts
+        .where((p) => p.regionId?.toLowerCase() == selectedCategory.toLowerCase())
+        .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    try {
+      final products = await apiService.getProducts(limit: 100);
+      setState(() {
+        allProducts = products;
+        isLoading = false;
+      });
+      print('Produk berhasil dimuat: ${products.length}');
+    } catch (e) {
+      print('Gagal memuat produk: $e');
+      setState(() => isLoading = false);
+    }
   }
 
   @override
@@ -109,13 +73,13 @@ class _HomepageState extends State<Homepage> {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Color(0xFF86A340), width: 1),
             ),
-            child: TextField(
-              style: const TextStyle(color: Colors.red),
+            child: const TextField(
+              style: TextStyle(color: Colors.red),
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(bottom: 12),
+                contentPadding: EdgeInsets.only(bottom: 12),
                 hintText: 'Cari barang...',
-                hintStyle: const TextStyle(color: Colors.red),
-                prefixIcon: const Icon(Icons.search, color: Colors.red),
+                hintStyle: TextStyle(color: Colors.red),
+                prefixIcon: Icon(Icons.search, color: Colors.red),
                 border: InputBorder.none,
               ),
             ),
@@ -124,91 +88,39 @@ class _HomepageState extends State<Homepage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const NotificationPage()),
-              );
-            },
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => NotificationPage()),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {
-              // Aksi saat ikon keranjang ditekan (jika ada)
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const UbahProfilPage()),
-              );
-            },
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => UbahProfilPage()),
+            ),
           ),
         ],
       ),
-
-      body: Column(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Kategori',
-                  style: TextStyle(
-                    color: Color(0xFF86A340),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 5),
-                DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  iconEnabledColor: Color(0xFF86A340),
-                  dropdownColor: Colors.white,
-                  value: selectedCategory,
-                  style: TextStyle(color: Color(0xFF86A340)),
-                  items: categories.map((category) {
-                    return DropdownMenuItem(
-                      value: category,
-                      child: Text(category, style: TextStyle(color: Color(0xFF86A340))),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedCategory = value!;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
+          kategoriFilter(),
           Expanded(
-            child: GridView.count(
+            child: filteredProducts.isEmpty
+                ? const Center(child: Text('Tidak ada produk ditemukan.'))
+                : GridView.count(
               crossAxisCount: 2,
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               childAspectRatio: 0.75,
-              children: filteredProducts.map((product) {
+              children: filteredProducts.map<Widget>((product) {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -223,22 +135,19 @@ class _HomepageState extends State<Homepage> {
                       : buildProductCard(product),
                 );
               }).toList(),
-
-
             ),
           ),
         ],
       ),
-
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF86A340),
+        backgroundColor: const Color(0xFF86A340),
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
         onTap: (index) {
           if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const WishlistPage()),
+              MaterialPageRoute(builder: (_) => WishlistPage()),
             );
           } else if (index == 2) {
             Navigator.push(
@@ -256,8 +165,60 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // Card tampilan umum (Semua, Madura, dll)
-  Widget buildProductCard(Product product) {
+  Widget kategoriFilter() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Kategori',
+            style: TextStyle(
+              color: Color(0xFF86A340),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 5),
+          DropdownButtonFormField(
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            iconEnabledColor: const Color(0xFF86A340),
+            dropdownColor: Colors.white,
+            value: selectedCategory,
+            style: const TextStyle(color: Color(0xFF86A340)),
+            items: categories.map((category) {
+              return DropdownMenuItem(
+                value: category,
+                child: Text(category, style: const TextStyle(color: Color(0xFF86A340))),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedCategory = value!;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildProductCard(model.FullyEnrichedProduct product) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -265,32 +226,39 @@ class _HomepageState extends State<Homepage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.asset(
-              product.imagePath,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+            child: Image.network(
+              product.images.isNotEmpty ? product.images.first : '',
               height: 130,
               width: double.infinity,
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                height: 130,
+                color: Colors.grey.shade300,
+                child: const Icon(Icons.image_not_supported),
+              ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(product.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 5),
-                Text(product.price, style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                SizedBox(height: 5),
+                Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 5),
+                Text('Rp ${product.price.toInt()}',
+                    style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(Icons.star, color: Colors.amber, size: 14),
-                    SizedBox(width: 4),
-                    Text(product.rating, style: TextStyle(fontSize: 12)),
+                    const Icon(Icons.star, color: Colors.amber, size: 14),
+                    const SizedBox(width: 4),
+                    Text('4.5 • ${product.stock} terjual',
+                        style: const TextStyle(fontSize: 12)),
                   ],
                 ),
-                SizedBox(height: 5),
-                Text(product.location, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const SizedBox(height: 5),
+                Text(product.regionId ?? '-', style: const TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
           ),
@@ -299,8 +267,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // Card tampilan untuk kategori Jawa Barat
-  Widget buildSimpleCard(Product product) {
+  Widget buildSimpleCard(model.FullyEnrichedProduct product) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -308,46 +275,26 @@ class _HomepageState extends State<Homepage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.asset(
-              product.imagePath,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+            child: Image.network(
+              product.images.isNotEmpty ? product.images.first : '',
               height: 130,
               width: double.infinity,
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                height: 130,
+                color: Colors.grey.shade300,
+                child: const Icon(Icons.image_not_supported),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      product.iconPath,
-                      height: 20,
-                      width: 20,
-                      errorBuilder: (context, error, stackTrace) => SizedBox(), // Prevent crash if icon not found
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        product.title,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  product.location,
-                  style: TextStyle(color: Colors.grey),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            child: Text(
+              product.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
           ),
         ],
@@ -355,26 +302,3 @@ class _HomepageState extends State<Homepage> {
     );
   }
 }
-
-class Product {
-  final String title;
-  final String price;
-  final String rating;
-  final String location;
-  final String imagePath;
-  final String category;
-  final String iconPath;
-  final String description;
-
-  Product({
-    required this.title,
-    required this.price,
-    required this.rating,
-    required this.location,
-    required this.imagePath,
-    required this.category,
-    required this.iconPath,
-    required this.description,
-  });
-}
-

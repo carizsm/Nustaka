@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart'; // pastikan class Product dikenali
+import '../../models/product.dart'; // Gunakan model Product dari folder models
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
@@ -18,19 +18,30 @@ class ProductDetailPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.shopping_cart, color: Colors.white), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.menu, color: Colors.white), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart, color: Colors.white),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {},
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Gambar Produk
-            Image.asset(
-              product.imagePath,
+            Image.network(
+              product.images.isNotEmpty ? product.images.first : '',
               width: double.infinity,
               height: 250,
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                height: 250,
+                color: Colors.grey[300],
+                child: const Icon(Icons.broken_image, size: 50),
+              ),
             ),
 
             // Informasi Produk
@@ -44,7 +55,7 @@ class ProductDetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        product.location,
+                        product.location ?? '-', // Perbaikan: fallback jika null
                         style: const TextStyle(color: Colors.grey),
                       ),
                       Container(
@@ -58,7 +69,7 @@ class ProductDetailPage extends StatelessWidget {
                             const Icon(Icons.star, color: Colors.white, size: 14),
                             const SizedBox(width: 4),
                             Text(
-                              product.rating.split("•").first.trim(), // hanya rating angka
+                              product.ratingLabel,
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
@@ -68,14 +79,14 @@ class ProductDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    product.title,
+                    product.name,
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   const Text("Baso Tahu Goreng, Cepat Saji, Jajanan"),
                   const SizedBox(height: 8),
                   Text(
-                    product.price,
+                    product.priceLabel,
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
