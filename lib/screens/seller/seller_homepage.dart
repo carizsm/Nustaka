@@ -7,6 +7,7 @@ import 'seller_statistik_produk.dart';
 import 'seller_profil.dart';
 import 'seller_user_data.dart';
 import 'seller_edit_produk.dart';
+import 'seller_notification.dart';
 
 class SellerHomepage extends StatefulWidget {
   const SellerHomepage({super.key});
@@ -43,7 +44,12 @@ class _SellerHomepageState extends State<SellerHomepage> {
           ),
           IconButton(
             icon: const Icon(Icons.notifications_none, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SellerNotificationPage()),
+              );
+            },
           ),
           IconButton(
             icon: const Icon(Icons.person_outline, color: Colors.white),
