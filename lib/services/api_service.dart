@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 // Impor model Anda
 import '../models/product.dart'; // Sesuaikan path
+import '../models/order.dart';
+import '../models/transaction.dart';
 // ... impor model lain
 
 class ApiService {
@@ -105,7 +107,7 @@ class ApiService {
 // createReview, getReviewsByProduct
 // getMyProducts (untuk seller)
 Future<List<FullyEnrichedProduct>> getMyProducts() async {
-  final uri = Uri.parse('$_baseUrl/seller/products');
+  final uri = Uri.parse('$_baseUrl/products/my');
   final response = await http.get(uri, headers: await _getHeaders(includeAuth: true));
 
   if (response.statusCode == 200) {
@@ -113,14 +115,19 @@ Future<List<FullyEnrichedProduct>> getMyProducts() async {
     final data = jsonDecode(decodedBody) as Map<String, dynamic>;
     final List<dynamic> productsJson = data['data'];
     return productsJson.map((e) => FullyEnrichedProduct.fromJson(e)).toList();
+  } else if (response.statusCode == 404) {
+    // 404 berarti data kosong → kembalikan list kosong, bukan lempar error
+    return [];
   } else {
     throw Exception('Gagal memuat produk saya. Status: ${response.statusCode}');
   }
 }
 
+
+
 // getMyOrders (untuk seller)
 Future<List<OrderData>> getMyOrders() async {
-  final uri = Uri.parse('$_baseUrl/seller/orders');
+  final uri = Uri.parse('$_baseUrl/orders'); // ✅ endpoint benar
   final response = await http.get(uri, headers: await _getHeaders(includeAuth: true));
 
   if (response.statusCode == 200) {
@@ -128,6 +135,8 @@ Future<List<OrderData>> getMyOrders() async {
     final data = jsonDecode(decoded);
     final List<dynamic> list = data['data'];
     return list.map((e) => OrderData.fromJson(e)).toList();
+  } else if (response.statusCode == 404) {
+    return [];
   } else {
     throw Exception('Gagal memuat daftar order');
   }
@@ -179,7 +188,6 @@ Future<void> createProduct({
 }
 
 // updateProduct (untuk seller)
-// Update produk oleh seller
 Future<void> updateProduct({
   required String productId,
   required String name,

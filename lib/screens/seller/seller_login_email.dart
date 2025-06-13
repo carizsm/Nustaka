@@ -24,7 +24,7 @@ class _SellerLoginEmailPageState extends State<SellerLoginEmailPage> {
     });
 
     try {
-      final result = await ApiService().login(
+      await ApiService().login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
-import '../../models/product.dart'; // pastikan nama class-nya sesuai
+import '../../models/product.dart';
 import 'seller_order.dart';
 import 'seller_transaction.dart';
 import 'seller_tambah_produk.dart';
 import 'seller_statistik_toko.dart';
 import 'seller_statistik_produk.dart';
 import 'seller_profil.dart';
-import 'seller_user_data.dart';
 import 'seller_edit_produk.dart';
 import 'seller_notification.dart';
 
@@ -40,26 +39,17 @@ class _SellerHomepageState extends State<SellerHomepage> {
           style: TextStyle(color: Colors.white),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search, color: Colors.white), onPressed: () {}),
           IconButton(
             icon: const Icon(Icons.notifications_none, color: Colors.white),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SellerNotificationPage()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const SellerNotificationPage()));
             },
           ),
           IconButton(
             icon: const Icon(Icons.person_outline, color: Colors.white),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SellerProfilPage()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const SellerProfilPage()));
             },
           ),
         ],
@@ -85,10 +75,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
           ? FloatingActionButton(
               backgroundColor: const Color(0xFF9EB23B),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => TambahProdukPage()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (_) => TambahProdukPage()));
               },
               child: const Icon(Icons.add, color: Colors.white),
             )
@@ -132,13 +119,8 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_error != null) {
-      return Center(child: Text(_error!, style: const TextStyle(color: Colors.red)));
-    }
+    if (_isLoading) return const Center(child: CircularProgressIndicator());
+    if (_error != null) return Center(child: Text(_error!, style: TextStyle(color: Colors.red)));
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -149,20 +131,34 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
           const SizedBox(height: 24),
           const Text("Produk", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
+
           if (_products.isEmpty)
-            const Text("Belum ada produk.")
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF9C3),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.yellow.shade700),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Icon(Icons.info_outline, color: Colors.orange),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      "Belum ada produk yang ingin dijual.\nTambahkan produkmu dengan menekan tombol ➕ di kanan bawah.",
+                      style: TextStyle(color: Colors.black87, fontSize: 14),
+                    ),
+                  ),
+                ],
+              ),
+            )
           else
             ..._products.map((product) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: _buildProductCard(
-                context,
-                image: product.imageUrl ?? 'assets/images/placeholder.png',
-                name: product.name,
-                price: 'Rp ${product.price}',
-                rating: '${product.rating} • ${product.totalSold} terjual',
-                visible: product.visible ?? true,
-              ),
-            )),
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _buildProductCard(context, product),
+                )),
         ],
       ),
     );
@@ -180,10 +176,7 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
             const Spacer(),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => SellerStatistikToko()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (_) => SellerStatistikToko()));
               },
               child: const Text('Lihat Statistik toko >', style: TextStyle(color: Colors.green)),
             ),
@@ -230,12 +223,9 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context,
-      {required String image,
-      required String name,
-      required String price,
-      required String rating,
-      required bool visible}) {
+  Widget _buildProductCard(BuildContext context, FullyEnrichedProduct product) {
+    final image = product.imageUrl.isNotEmpty ? product.imageUrl : 'https://via.placeholder.com/150';
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 3,
@@ -251,7 +241,7 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                 bottomLeft: Radius.circular(12),
               ),
               image: DecorationImage(
-                image: AssetImage(image),
+                image: NetworkImage(image),
                 fit: BoxFit.cover,
               ),
             ),
@@ -265,26 +255,28 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(name,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          product.name,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       Icon(
-                        visible ? Icons.visibility : Icons.visibility_off,
+                        product.visible ? Icons.visibility : Icons.visibility_off,
                         size: 20,
                         color: Colors.grey,
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(price, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text('Rp ${product.price}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 4),
-                      Text(rating, style: const TextStyle(fontSize: 12)),
+                      Text('${product.rating} • ${product.totalSold} terjual', style: const TextStyle(fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -297,15 +289,15 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => SellerStatistikProduk(
-                                  namaProduk: name,
-                                  lokasi: "Tidak ada data",
-                                  deskripsi: "-",
-                                  harga: price,
+                                  namaProduk: product.name,
+                                  lokasi: product.location ?? '-',
+                                  deskripsi: product.description,
+                                  harga: 'Rp ${product.price}',
                                   gambar: image,
-                                  terjual: 0,
+                                  terjual: product.totalSold,
                                   dilihat: 0,
                                   dipesan: 0,
-                                  rating: 0,
+                                  rating: product.rating,
                                   ulasan: {},
                                 ),
                               ),
@@ -322,14 +314,15 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => EditProdukPage(
-                                  namaProduk: name,
-                                  deskripsi: "-",
-                                  detail: "-",
-                                  harga: price.replaceAll(RegExp(r'[^0-9]'), ''),
-                                  stok: 0,
-                                  satuan: "Pcs",
-                                  visible: visible,
-                                  gambar: image,
+                                  productId: product.id,
+                                  namaProduk: product.name,
+                                  deskripsi: product.description,
+                                  detail: product.briefHistory ?? '-',
+                                  harga: product.price.toString(),
+                                  stok: product.stock,
+                                  satuan: product.category ?? 'Pcs',
+                                  visible: product.visible,
+                                  gambar: product.imageUrl,
                                 ),
                               ),
                             );

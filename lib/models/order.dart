@@ -19,13 +19,16 @@ class OrderData {
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
     return OrderData(
-      invoice: json['invoice'],
-      customerName: json['customer_name'],
-      deadline: json['deadline'],
-      status: json['status'],
-      productName: json['product_name'],
-      quantity: json['quantity'],
-      details: List<String>.from(json['details']),
+      invoice: json['invoice'] ?? '',
+      customerName: json['customer_name'] ?? '',
+      deadline: json['deadline'] ?? '',
+      status: json['status'] ?? '',
+      productName: json['product_name'] ?? '',
+      quantity: json['quantity']?.toString() ?? '0',
+      details: (json['details'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
     );
   }
 }

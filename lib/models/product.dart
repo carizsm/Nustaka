@@ -155,4 +155,10 @@ class FullyEnrichedProduct extends Product {
     }
     return null;
   }
+
+  String get imageUrl => images.isNotEmpty ? images[0] : '';
+  double get rating => reviewSummary?.averageRating ?? 0.0;
+  int get totalSold => stock;
+  bool get visible => status?.toLowerCase() == 'active';
+  String get productId => id;
 }
