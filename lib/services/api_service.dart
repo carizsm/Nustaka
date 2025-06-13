@@ -127,7 +127,7 @@ Future<List<FullyEnrichedProduct>> getMyProducts() async {
 
 // getMyOrders (untuk seller)
 Future<List<OrderData>> getMyOrders() async {
-  final uri = Uri.parse('$_baseUrl/orders'); // ✅ endpoint benar
+  final uri = Uri.parse('$_baseUrl/orders');
   final response = await http.get(uri, headers: await _getHeaders(includeAuth: true));
 
   if (response.statusCode == 200) {
@@ -167,7 +167,7 @@ Future<void> createProduct({
   required int price,
   required bool visible,
 }) async {
-  final uri = Uri.parse('$_baseUrl/seller/products');
+  final uri = Uri.parse('$_baseUrl/products');
   final response = await http.post(
     uri,
     headers: await _getHeaders(includeAuth: true),

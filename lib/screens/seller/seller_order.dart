@@ -48,34 +48,25 @@ class _SellerOrderPageState extends State<SellerOrderPage> {
           const Text("Daftar Order", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
 
-          // Order Status Summary
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildOrderStatus("${_orders.length}", "Semua Pesanan"),
-              _buildOrderStatus(
-                  "${_orders.where((o) => o.status == "Menunggu Pembayaran").length}",
-                  "Menunggu Pembayaran"),
-              _buildOrderStatus(
-                  "${_orders.where((o) => o.status == "Siap Dikirim").length}", "Siap Dikirim"),
+              _buildOrderStatus("${_orders.where((o) => o.status == "Menunggu Pembayaran").length}", "Menunggu Pembayaran"),
+              _buildOrderStatus("${_orders.where((o) => o.status == "Siap Dikirim").length}", "Siap Dikirim"),
             ],
           ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildOrderStatus(
-                  "${_orders.where((o) => o.status == "Dalam Perjalanan").length}",
-                  "Dalam Perjalanan"),
-              _buildOrderStatus(
-                  "${_orders.where((o) => o.status == "Dibatalkan").length}", "Dibatalkan"),
+              _buildOrderStatus("${_orders.where((o) => o.status == "Dalam Perjalanan").length}", "Dalam Perjalanan"),
+              _buildOrderStatus("${_orders.where((o) => o.status == "Dibatalkan").length}", "Dibatalkan"),
             ],
           ),
           const SizedBox(height: 24),
-
           const Divider(),
           const SizedBox(height: 16),
-
           const Text("Semua Order", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
 
@@ -83,17 +74,17 @@ class _SellerOrderPageState extends State<SellerOrderPage> {
             const Text("Belum ada order.")
           else
             ..._orders.map((order) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: _buildOrderItem(
-                order.invoice,
-                order.customerName,
-                order.deadline,
-                order.status,
-                order.productName,
-                order.quantity,
-                order.details,
-              ),
-            )),
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _buildOrderItem(
+                    order.invoice,
+                    order.customerName,
+                    order.deadline,
+                    order.status,
+                    order.productName,
+                    order.quantity,
+                    order.details,
+                  ),
+                )),
         ],
       ),
     );
@@ -115,7 +106,7 @@ class _SellerOrderPageState extends State<SellerOrderPage> {
     String status,
     String product,
     String quantity,
-    List<String> details,
+    Map<String, dynamic> details,
   ) {
     return Card(
       child: Padding(
@@ -126,9 +117,7 @@ class _SellerOrderPageState extends State<SellerOrderPage> {
             Row(
               children: [
                 Expanded(
-                  child: Text(invoice,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis),
+                  child: Text(invoice, style: const TextStyle(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
                 ),
                 const SizedBox(width: 8),
                 Container(
@@ -139,10 +128,7 @@ class _SellerOrderPageState extends State<SellerOrderPage> {
                   ),
                   child: Text(
                     status,
-                    style: TextStyle(
-                      color: _getStatusColor(status),
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(color: _getStatusColor(status), fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -151,35 +137,26 @@ class _SellerOrderPageState extends State<SellerOrderPage> {
             const SizedBox(height: 8),
             Text(customer),
             const SizedBox(height: 12),
-
             Text("Batas Respons", style: TextStyle(color: Colors.grey[600])),
             Text(deadline, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
-
             const Divider(),
             const SizedBox(height: 12),
-
             Text(product, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text("Jumlah Pembelian : $quantity"),
             const SizedBox(height: 12),
 
-            for (var detail in details)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  children: [
-                    Icon(
-                      detail == details.first
-                          ? Icons.check_box_outline_blank
-                          : Icons.check_box,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(detail),
-                  ],
-                ),
+            ...details.entries.map((entry) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  const Icon(Icons.label_outline, size: 20),
+                  const SizedBox(width: 8),
+                  Text("${entry.key}: ${entry.value}"),
+                ],
               ),
+            )),
             const SizedBox(height: 16),
 
             SizedBox(

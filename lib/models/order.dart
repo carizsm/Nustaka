@@ -5,7 +5,7 @@ class OrderData {
   final String status;
   final String productName;
   final String quantity;
-  final List<String> details;
+  final Map<String, dynamic> details;
 
   OrderData({
     required this.invoice,
@@ -25,10 +25,11 @@ class OrderData {
       status: json['status'] ?? '',
       productName: json['product_name'] ?? '',
       quantity: json['quantity']?.toString() ?? '0',
-      details: (json['details'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
+      details: (json['details'] is Map)
+          ? Map<String, dynamic>.from(json['details'])
+          : {
+              "info": json['details'].toString()
+            },
     );
   }
 }
