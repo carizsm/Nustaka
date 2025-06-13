@@ -1,10 +1,49 @@
 import 'package:flutter/material.dart';
+import '../../services/api_service.dart';
 import 'seller_homepage.dart';
 import 'seller_login_phone.dart';
 import 'seller_signup_email.dart';
 
-class SellerLoginEmailPage extends StatelessWidget {
+class SellerLoginEmailPage extends StatefulWidget {
   const SellerLoginEmailPage({super.key});
+
+  @override
+  State<SellerLoginEmailPage> createState() => _SellerLoginEmailPageState();
+}
+
+class _SellerLoginEmailPageState extends State<SellerLoginEmailPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _error;
+
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final result = await ApiService().login(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      // Jika berhasil, arahkan ke halaman homepage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const SellerHomepage()),
+      );
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +73,17 @@ class SellerLoginEmailPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
+            if (_error != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  _error!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(
                 hintText: 'E-mail',
                 prefixIcon: const Icon(Icons.email),
@@ -49,6 +98,7 @@ class SellerLoginEmailPage extends StatelessWidget {
             const SizedBox(height: 12),
 
             TextField(
+              controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: 'Password',
@@ -63,25 +113,22 @@ class SellerLoginEmailPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SellerHomepage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD9A25F),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                "Lanjut",
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
+            _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ElevatedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD9A25F),
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      "Lanjut",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
             const SizedBox(height: 24),
 
             const Center(
@@ -93,10 +140,9 @@ class SellerLoginEmailPage extends StatelessWidget {
             const SizedBox(height: 12),
 
             ElevatedButton.icon(
-              onPressed: () {
-              },
+              onPressed: () {},
               icon: Image.asset(
-                'assets/icons/google.png', 
+                'assets/icons/google.png',
                 height: 22,
               ),
               label: const Text("Google"),
