@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../services/api_service.dart';
-import '../../models/product.dart'; // pastikan nama class-nya sesuai
 import 'seller_order.dart';
 import 'seller_transaction.dart';
 import 'seller_tambah_produk.dart';
@@ -30,13 +28,13 @@ class _SellerHomepageState extends State<SellerHomepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF9EB23B),
         elevation: 0,
-        title: const Text(
-          'Halo, Penjual',
+        title: Text(
+          'Halo, $currentUsername',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
@@ -74,72 +72,45 @@ class _SellerHomepageState extends State<SellerHomepage> {
           });
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Order'),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Transaction'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Order',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt),
+            label: 'Transaction',
+          ),
         ],
         selectedItemColor: Colors.yellowAccent,
         unselectedItemColor: Colors.white,
       ),
       floatingActionButton: _currentIndex == 0
-          ? FloatingActionButton(
-              backgroundColor: const Color(0xFF9EB23B),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => TambahProdukPage()),
-                );
-              },
-              child: const Icon(Icons.add, color: Colors.white),
-            )
-          : null,
+        ? FloatingActionButton(
+            backgroundColor: const Color(0xFF9EB23B),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TambahProdukPage(),
+                ),
+              );
+            },
+            child: const Icon(Icons.add, color: Colors.white),
+          )
+        : null,
     );
   }
 }
 
-class SellerHomeContent extends StatefulWidget {
+class SellerHomeContent extends StatelessWidget {
   const SellerHomeContent({super.key});
 
   @override
-  State<SellerHomeContent> createState() => _SellerHomeContentState();
-}
-
-class _SellerHomeContentState extends State<SellerHomeContent> {
-  List<FullyEnrichedProduct> _products = [];
-  bool _isLoading = true;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadProducts();
-  }
-
-  Future<void> _loadProducts() async {
-    try {
-      final result = await ApiService().getMyProducts();
-      setState(() {
-        _products = result;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_error != null) {
-      return Center(child: Text(_error!, style: const TextStyle(color: Colors.red)));
-    }
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -147,22 +118,28 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
         children: [
           _buildDashboard(context),
           const SizedBox(height: 24),
-          const Text("Produk", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const Text(
+            "Produk",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 16),
-          if (_products.isEmpty)
-            const Text("Belum ada produk.")
-          else
-            ..._products.map((product) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: _buildProductCard(
-                context,
-                image: product.imageUrl ?? 'assets/images/placeholder.png',
-                name: product.name,
-                price: 'Rp ${product.price}',
-                rating: '${product.rating} • ${product.totalSold} terjual',
-                visible: product.visible ?? true,
-              ),
-            )),
+          _buildProductCard(
+            context,
+            image: 'assets/images/sate_madura.png', // ganti dengan gambar asli
+            name: 'Sate Madura',
+            price: 'Rp 100.000',
+            rating: '4.8 • 100+ terjual',
+            visible: true,
+          ),
+          const SizedBox(height: 16),
+          _buildProductCard(
+            context,
+            image: 'assets/images/sate_travis.png', // ganti dengan gambar asli
+            name: 'Sate Madura Mang Travis Asli California ...',
+            price: 'Rp 100.000',
+            rating: '0 • 0 terjual',
+            visible: false,
+          ),
         ],
       ),
     );
@@ -174,18 +151,27 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
       children: [
         Row(
           children: [
-            const Text('Dashboard', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              'Dashboard',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(width: 8),
-            const Text('Hari ini', style: TextStyle(fontSize: 16)),
+            const Text(
+              'Hari ini',
+              style: TextStyle(fontSize: 16),
+            ),
             const Spacer(),
             TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => SellerStatistikToko()),
+                  MaterialPageRoute(builder: (context) => SellerStatistikToko())
                 );
               },
-              child: const Text('Lihat Statistik toko >', style: TextStyle(color: Colors.green)),
+              child: const Text(
+                'Lihat Statistik toko >',
+                style: TextStyle(color: Colors.green),
+              ),
             ),
           ],
         ),
@@ -218,11 +204,24 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(number, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green)),
+              Text(
+                number,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
               const SizedBox(height: 4),
               Text(label),
               if (subtitle.isNotEmpty)
-                Text('Potensi $subtitle', style: const TextStyle(fontSize: 12, color: Colors.green)),
+                Text(
+                  'Potensi $subtitle',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.green,
+                  ),
+                ),
             ],
           ),
         ),
@@ -263,12 +262,18 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(name,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       Icon(
                         visible ? Icons.visibility : Icons.visibility_off,
@@ -278,13 +283,22 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(price, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text(
+                    price,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 4),
-                      Text(rating, style: const TextStyle(fontSize: 12)),
+                      Text(
+                        rating,
+                        style: const TextStyle(fontSize: 12),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -296,21 +310,26 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => SellerStatistikProduk(
+                                builder: (context) => SellerStatistikProduk(
                                   namaProduk: name,
-                                  lokasi: "Tidak ada data",
-                                  deskripsi: "-",
+                                  lokasi: "Bandung, Jawa Barat",
+                                  deskripsi: visible ? "Sate Madura aseli cuy" : "Mang Travis Jualan Sate cuy!",
                                   harga: price,
                                   gambar: image,
-                                  terjual: 0,
-                                  dilihat: 0,
-                                  dipesan: 0,
-                                  rating: 0,
-                                  ulasan: {},
+                                  terjual: visible ? 56 : 0,
+                                  dilihat: visible ? 34 : 0,
+                                  dipesan: visible ? 47 : 0,
+                                  rating: visible ? 4.9 : 0.0,
+                                  ulasan: visible
+                                      ? {5: 1034, 4: 24, 3: 6, 2: 3, 1: 1}
+                                      : {5: 0, 4: 0, 3: 0, 2: 0, 1: 0},
                                 ),
                               ),
                             );
                           },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Colors.grey),
+                          ),
                           child: const Text('Statistik'),
                         ),
                       ),
@@ -321,12 +340,12 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => EditProdukPage(
+                                builder: (context) => EditProdukPage(
                                   namaProduk: name,
-                                  deskripsi: "-",
-                                  detail: "-",
+                                  deskripsi: visible ? "Sate Madura asli cuy" : "Mang Travis Jualan Sate cuy!",
+                                  detail: visible ? "Daging ayam pilihan, bumbu khas madura" : "Belum ada detail",
                                   harga: price.replaceAll(RegExp(r'[^0-9]'), ''),
-                                  stok: 0,
+                                  stok: visible ? 10 : 0,
                                   satuan: "Pcs",
                                   visible: visible,
                                   gambar: image,
@@ -334,6 +353,9 @@ class _SellerHomeContentState extends State<SellerHomeContent> {
                               ),
                             );
                           },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Colors.grey),
+                          ),
                           child: const Text('Edit'),
                         ),
                       ),
