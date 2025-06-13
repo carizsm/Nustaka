@@ -98,6 +98,71 @@ class ApiService {
     }
   }
 
+  // Add product to cart
+  // lib/services/api_service.dart
+  Future<void> addToCart(String productId, {int quantity = 1}) async {
+    final url = Uri.parse('$_baseUrl/cart');
+    final headers = await _getHeaders(includeAuth: true);
+    final body = jsonEncode({
+      'product_id': productId,
+      'quantity': quantity,
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to add to cart: ${response.body}');
+    }
+  }
+
+  // Get all cart items
+  Future<List<Map<String, dynamic>>> getCart() async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/cart'),
+      headers: await _getHeaders(includeAuth: true),
+    );
+    if (response.statusCode == 200) {
+      final decodedBody = utf8.decode(response.bodyBytes);
+      final dynamic data = jsonDecode(decodedBody);
+
+      List<dynamic> cartListJson;
+      if (data is List) {
+        cartListJson = data;
+      } else if (data is Map<String, dynamic> && data['data'] is List) {
+        cartListJson = data['data'];
+      } else {
+        throw Exception('Unexpected cart response format');
+      }
+
+      return cartListJson.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load cart');
+    }
+  }
+
+  // Update cart item quantity
+  Future<void> updateCartItem(String cartItemId, int quantity) async {
+    final response = await http.put(
+      Uri.parse('$_baseUrl/cart/$cartItemId'),
+      headers: await _getHeaders(includeAuth: true),
+      body: jsonEncode({'quantity': quantity}),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update cart item');
+    }
+  }
+
+  // Delete cart item
+  Future<void> deleteCartItem(String cartItemId) async {
+    final response = await http.delete(
+      Uri.parse('$_baseUrl/cart/$cartItemId'),
+      headers: await _getHeaders(includeAuth: true),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete cart item');
+    }
+  }
+
 // ... Tambahkan method lain untuk endpoint:
 // registerUser, getCurrentUser, updateUser, deleteUser
 // addToCart, getCart, updateCartItem, deleteCartItem
